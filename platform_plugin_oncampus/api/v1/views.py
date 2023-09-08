@@ -9,12 +9,27 @@ from django.core.exceptions import (  # lint-amnesty, pylint: disable=wrong-impo
 
 from openedx.core.lib.api.permissions import ApiKeyHeaderPermissionIsAuthenticated
 from openedx.core.djangoapps.enrollments.views import CourseEnrollmentsApiListView
+from openedx.core.djangoapps.enrollments.serializers import CourseEnrollmentsApiListSerializer
 from openedx.core.djangoapps.enrollments.forms import CourseEnrollmentsApiListForm
 from common.djangoapps.student.models import CourseEnrollment
+
+from rest_framework import serializers
+
+class UserCourseEnrollmentsListAPISerializer(CourseEnrollmentsApiListSerializer):
+
+    user = serializers.SerializerMethodField('get_user_info')
+
+    def get_user_info(self, model):
+        return {
+            "username": model.user.username,
+            "email": model.user.email,
+        }
+
 
 class UserCourseEnrollmentsListAPI(CourseEnrollmentsApiListView):
 
     permission_classes = (ApiKeyHeaderPermissionIsAuthenticated,)
+    serializer_class = UserCourseEnrollmentsListAPISerializer
 
     def get_queryset(self):
         """
