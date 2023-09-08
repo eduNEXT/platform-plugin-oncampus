@@ -1,10 +1,11 @@
 """
-URLs for platform_plugin_oncampus.
+URL configuration for the On Campus APIs.
 """
-from django.urls import re_path  # pylint: disable=unused-import
-from django.views.generic import TemplateView  # pylint: disable=unused-import
+
+from django.urls import include, re_path
+
+app_name = "platform_plugin_oncampus"
 
 urlpatterns = [
-    # TODO: Fill in URL patterns and views here.
-    # re_path(r'', TemplateView.as_view(template_name="platform_plugin_oncampus/base.html")),
+    re_path(r'^api/', include("platform_plugin_oncampus.api.urls")),
 ]
